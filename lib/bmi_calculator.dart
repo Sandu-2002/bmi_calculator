@@ -13,6 +13,24 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
   double height = 183;
   int weight = 74;
   int age = 30;
+  double bmi = 0;
+
+  double calculateBMI({required int weight, required double height}) {
+    double heightInMeters = height / 100;
+    return weight / (heightInMeters * heightInMeters);
+  }
+
+  Color getBMIColor(double bmi) {
+    if (bmi < 18.5) {
+      return Colors.blue;
+    } else if (bmi < 25) {
+      return Colors.green;
+    } else if (bmi < 30) {
+      return Colors.orange;
+    } else {
+      return Colors.red;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +42,7 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
         title: const Text('BMI Calculator'),
       ),
       backgroundColor: kBackgroundcolor,
-      body: Container(
+      body: SizedBox(
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -42,6 +60,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                           onTap: () {
                             setState(() {
                               isMale = true;
+                            });
+                            var bmiValue = calculateBMI(
+                              weight: weight,
+                              height: height,
+                            );
+                            setState(() {
+                              bmi = bmiValue;
                             });
                           },
                           child: Container(
@@ -70,6 +95,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                           onTap: () {
                             setState(() {
                               isMale = false;
+                            });
+                            var bmiValue = calculateBMI(
+                              weight: weight,
+                              height: height,
+                            );
+                            setState(() {
+                              bmi = bmiValue;
                             });
                           },
                           child: Container(
@@ -136,6 +168,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                             setState(() {
                               height = value;
                             });
+                            var bmiValue = calculateBMI(
+                              weight: weight,
+                              height: height,
+                            );
+                            setState(() {
+                              bmi = bmiValue;
+                            });
                           },
                           thumbColor: kbuttoncolor,
                           activeColor: kActivecolor,
@@ -161,7 +200,7 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                                 ),
                               ),
                               Text(
-                                "74",
+                                "$weight",
                                 style: TextStyle(
                                   color: kActivecolor,
                                   fontSize: 40,
@@ -180,8 +219,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                                       0.5,
                                     ),
                                     onPressed: () {
+                                      if (weight > 25) weight--;
+                                      var bmiValue = calculateBMI(
+                                        weight: weight,
+                                        height: height,
+                                      );
                                       setState(() {
-                                        weight--;
+                                        bmi = bmiValue;
                                       });
                                     },
                                     child: Icon(
@@ -199,8 +243,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                                       0.5,
                                     ),
                                     onPressed: () {
+                                      if (weight < 250) weight++;
+                                      var bmiValue = calculateBMI(
+                                        weight: weight,
+                                        height: height,
+                                      );
                                       setState(() {
-                                        weight++;
+                                        bmi = bmiValue;
                                       });
                                     },
                                     child: Icon(Icons.add, color: kActivecolor),
@@ -226,7 +275,7 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                                 ),
                               ),
                               Text(
-                                "30",
+                                "$age",
                                 style: TextStyle(
                                   color: kActivecolor,
                                   fontSize: 40,
@@ -245,8 +294,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                                       0.5,
                                     ),
                                     onPressed: () {
+                                      if (age > 10) age--;
+                                      var bmiValue = calculateBMI(
+                                        weight: weight,
+                                        height: height,
+                                      );
                                       setState(() {
-                                        age--;
+                                        bmi = bmiValue;
                                       });
                                     },
                                     child: Icon(
@@ -264,8 +318,13 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                                       0.5,
                                     ),
                                     onPressed: () {
+                                      if (age < 100) age++;
+                                      var bmiValue = calculateBMI(
+                                        weight: weight,
+                                        height: height,
+                                      );
                                       setState(() {
-                                        age++;
+                                        bmi = bmiValue;
                                       });
                                     },
                                     child: Icon(Icons.add, color: kActivecolor),
@@ -281,8 +340,28 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                 ],
               ),
             ),
-            SizedBox(height: 25),
-            Spacer(),
+
+            Container(
+              decoration: kTileBorderDecoration,
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    "Your BMI is:",
+                    style: TextStyle(fontSize: 20, color: kActivecolor),
+                  ),
+                  Text(
+                    bmi.toStringAsFixed(1),
+                    style: TextStyle(
+                      color: getBMIColor(bmi),
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            /*Spacer(),
             Row(
               children: [
                 Expanded(
@@ -293,7 +372,10 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                       shape: RoundedRectangleBorder(),
                       minimumSize: const Size(double.infinity, 70),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      final bmi = calculateBMI(weight: weight, height: height);
+                      print("BMI:$bmi");
+                    },
                     child: const Text(
                       'Calculate BMI',
                       style: TextStyle(fontSize: 24),
@@ -301,7 +383,7 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                   ),
                 ),
               ],
-            ),
+            ),*/
           ],
         ),
       ),
