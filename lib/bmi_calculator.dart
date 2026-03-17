@@ -361,7 +361,7 @@ class _BMIcalculatorpageState extends State<BMIcalculatorpage> {
                 ],
               ),
             ),
-            /*Spacer(),
+            Spacer(),
             Row(
               children: [
                 Expanded(
